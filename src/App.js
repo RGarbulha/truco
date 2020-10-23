@@ -1,24 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import { Component } from 'react'
+import { Route, Switch, Link } from 'react-router-dom';
+
+import "./styles/Main.scss"
+import Main from './components/Main'
+
+
+class Menu extends Component {
+
+  render() {
+    return (
+      <div>
+        <h1>Home</h1>
+        <Link to="/main">Start</Link><br />
+        <Link to="/settings">Settings</Link>
+
+      </div>
+    )
+  }
+}
+
+class Settings extends Component {
+  render() {
+    return (<h1>Settings</h1>)
+  }
+}
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Switch>
+      <Route exact path='/' render={() => (
+        <Menu />
+      )} />
+      <Route exact path='/main' render={() => (
+        <Main />
+      )} />
+      <Route exact path='/settings' render={() => (
+        <Settings />
+      )} />
+    </Switch>
   );
 }
 
