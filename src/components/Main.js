@@ -44,36 +44,207 @@ const unshuffled = [
 ];
 
 const Main = () => {
+  const [gamePoints, setGamePoints] = useState([0, 0]);
+  const [matchPoints, setMatchPoints] = useState([0, 0]);
+  const [matchValue, setMatchValue] = useState(1);
+  const [roundPoints, setroundPoints] = useState([null, null, null]);
+  const [roundIndex, setRoundIndex] = useState(1);
+  const [selectedPlayer, setSelectedPlayer] = useState(null);
+
+  const [player1Hand, setPlayer1Hand] = useState([]);
+  const [player2Hand, setPlayer2Hand] = useState([]);
+  const [player3Hand, setPlayer3Hand] = useState([]);
+  const [player4Hand, setPlayer4Hand] = useState([]);
+  const [centerCard, setCenterCard] = useState(null);
+  const [playerdCards, setPlayedCards] = useState([]);
+
+  const getCards = (unshuffled) => {
+    return unshuffled;
+  };
+
+  const shuffleCards = () => {
+    let shuffled = null;
+    if (unshuffled.length)
+      shuffled = unshuffled
+        .map((a) => ({ sort: Math.random(), value: a }))
+        .sort((a, b) => a.sort - b.sort)
+        .map((a) => a.value);
+    return shuffled;
+  };
+
+  const startGame = () => {
+    setSelectedPlayer(Math.floor(Math.random() * 4) + 1);
+    if (gamePoints[0] <= 3 && gamePoints[1] <= 3) startMatch();
+  };
+
+  const selectPlayer = (index) => {};
+
+  const startMatch = () => {
+    if (matchPoints[0] <= 12 && matchPoints[1] <= 12) startRound();
+  };
+
+  const endMatch = (winner, points) => {};
+
+  const startRound = () => {
+    setMatchValue(1);
+    const cards = getCards(unshuffled);
+    const shuffled = shuffleCards(cards);
+
+    setPlayer1Hand([
+      shuffled.splice(0, 1),
+      shuffled.splice(0, 1),
+      shuffled.splice(0, 1),
+    ]);
+    setPlayer2Hand([
+      shuffled.splice(0, 1),
+      shuffled.splice(0, 1),
+      shuffled.splice(0, 1),
+    ]);
+    setPlayer3Hand([
+      shuffled.splice(0, 1),
+      shuffled.splice(0, 1),
+      shuffled.splice(0, 1),
+    ]);
+    setPlayer4Hand([
+      shuffled.splice(0, 1),
+      shuffled.splice(0, 1),
+      shuffled.splice(0, 1),
+    ]);
+    setCenterCard(shuffled.splice(0, 1));
+  };
+
+  const compareCards = () => {
+    //return winner team
+    return 1;
+  };
+
+  const endRound = (winner) => {
+    if (roundIndex < 3) {
+      setRoundIndex(roundIndex + 1);
+      startRound();
+    }
+  };
+
+  const endGame = () => {};
+
+  useEffect(() => {
+    startGame();
+  }, []);
+
   return (
     <div>
       <h1 style={{ textAlign: 'center' }}>Main</h1>
-      <Hand player={'player'} />
-      <Hand player={'competidor1'} />
-      <Hand player={'competidor1'} />
-      <Hand player={'partner'} />
+      <Table>
+        <Hand player={'player'} team={1} id={'p1'} cards={player1Hand} />
+        <Hand player={'competidor1'} team={2} id={'p2'} cards={player2Hand} />
+        <Hand player={'competidor2'} team={2} id={'p4'} cards={player4Hand} />
+        <Hand player={'partner'} team={1} id={'p3'} cards={player3Hand} />
+      </Table>
     </div>
   );
 };
 
-const Hand = (props) => {
-  const [hand, setHand] = useState([]);
-
+const Table = (props) => {
   const shuffleCards = () => {
     let shuffled = unshuffled
       .map((a) => ({ sort: Math.random(), value: a }))
       .sort((a, b) => a.sort - b.sort)
       .map((a) => a.value);
-    for (let i = 0; i < 3; i++)
-      if (unshuffled.length > 0)
-        unshuffled.splice(unshuffled.indexOf(shuffled[i]), 1);
-    setHand([shuffled[0] || [], shuffled[1] || [], shuffled[2] || []]);
   };
+
+  props.children.map((child) => {
+    // console.log(child);
+  });
 
   useEffect(() => {
     shuffleCards();
   }, []);
 
-  return <div></div>;
+  return (
+    <div className="table" style={{ position: 'relative', height: '90vh' }}>
+      {props.children.map((child) => child)}
+    </div>
+  );
+};
+
+const Hand = (props) => {
+  const handStyle = {
+    position: 'absolute',
+    height: props.team === 1 ? '25%' : '50%',
+    width: props.team === 1 ? '100%' : '25%',
+    right: props.player === 'competidor1' ? 0 : 'none',
+    backgroundColor: 'transparent', //background vermelho pra teste
+    top: props.player === 'player' ? 'none' : props.team === 2 ? '25%' : 0,
+    bottom: props.player === 'player' ? 0 : 'none',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  };
+
+  const cardsDisplayStyle = {
+    position: 'absolute',
+    transform:
+      props.player === 'competidor2'
+        ? 'rotate(90deg)  translateY(50%)'
+        : props.player === 'competidor1'
+        ? 'rotate(-90deg)'
+        : 'translate(-50%)',
+    width: 'fit-content',
+    height: 'fit-content',
+    margin: 'auto',
+    left:
+      props.player === 'partner'
+        ? '50%'
+        : props.player === 'player'
+        ? '50%'
+        : 0,
+    right: props.player === 'competidor1' ? -50 : 'none',
+    display: 'flex',
+    flexDirection: 'row',
+    columnGap: 20,
+    translate: '0.3s',
+    justifyContent: 'center',
+  };
+
+  const cardStyle = { width: 100, positon: 'absolute' };
+
+  const [cardStyleId, setCardStyleId] = useState([{}, {}, {}]);
+
+  const cards = props.cards;
+  const [hand, setHand] = useState([]);
+
+  console.log(props.player);
+
+  useEffect(() => {
+    if (cards.length) setHand([cards[0][0], cards[1][0], cards[2][0]]);
+  }, [props.cards]);
+
+  if (hand.length)
+    hand.map((card) => {
+      console.log(card[0]);
+    });
+
+  // if (cards[0]) console.log('hand', hand);
+
+  return (
+    <div style={handStyle}>
+      {/* <span style={{ position: 'absolute' }}>{props.player}</span> */}
+      <div style={cardsDisplayStyle}>
+        {hand.length !== 0
+          ? hand.map((card, i) => (
+              <div style={{ width: 100 }}>
+                <img
+                  style={{ ...cardStyle, ...cardStyleId[i] }}
+                  src={card.path}
+                  alt="card"
+                />
+                {hand && hand.title}
+              </div>
+            ))
+          : ''}
+      </div>
+    </div>
+  );
 };
 
 export default Main;

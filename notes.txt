@@ -1,0 +1,53 @@
+valores
+    jogo - numero de jogos vencidos - max:3
+    partida - 3 rodadas
+        valor: 1, 3, 6, 9 ou 12
+    rodada: max 4 jogadas
+    jogada: jogador joga uma carta
+    mao: max 3 cartas
+    vira: carta que determina manilhas
+    manilhas: 4 cartas
+    time: 2 jogadores
+    mao de onze: partida onde um tima possui 11 pontos
+        jogador pode ver as cartas do parceiro
+        truco proibido
+    mao de ferro: partida onde dois times possuem 11 pontos
+        truco proibido
+
+
+Passos do truco:
+
+Pegar as cartas
+Embaralhar
+selecionar o dealer
+dar as cartas comecando pelo jogador a direita do dealer
+    3 cartas cada jogador
+selecionar o "vira"
+comacar a rodada
+    jogador a direita do dealer comeca
+        jogar uma carta
+enquanto o "peh" nao jogar
+    jogador joga uma carta
+comparar maior carta
+    em caso de empate o vencedor da proxima rodada vence
+    pontuar time ganhador
+proxima rodada comecando pelo ganhador da rodada anterior
+    jogar uma carta
+    enquanto o "peh" nao jogar
+        jogador joga uma carta
+    comparar maior carta
+        em caso de empate time ganhador da primeira rodada vence
+        pontuar time ganhador
+            se time ganhador tiver duas vitorias ganha a partida
+fim da partida
+    pontuar time vencedor com valor da partida
+
+
+
+
+
+
+
+
+
+
